@@ -7,20 +7,48 @@ artboard (`claude.ai/design` project `9c37c446…`). No build step, no dependenc
 index.html    markup + content
 styles.css    design tokens and all layout
 app.js        countdown, scroll motion, FAQ, apply wizard
+serve.py      threaded local server (for previewing and for Tailscale)
 ```
 
 ## Run it
 
 ```bash
-python3 -m http.server 8000
+./serve.py
 ```
 
-Then open http://localhost:8000. Opening `index.html` straight off disk works too.
+Then open http://127.0.0.1:8791. Opening `index.html` straight off disk works too.
+
+`serve.py` is a threaded server bound to loopback. `python3 -m http.server` also
+works, but it handles one request at a time, so a handful of simultaneous visitors
+can stall each other.
 
 ## Deploy
 
-Drop the three files on any static host (Netlify, Vercel, GitHub Pages, S3). Nothing
+Drop the static files on any host (Netlify, Vercel, GitHub Pages, S3). Nothing
 server-side is required unless you wire up the application form below.
+
+### Sharing it from this Mac over Tailscale
+
+Funnel puts the local server on the public internet over HTTPS, so people who are
+**not** on the tailnet can open it:
+
+```bash
+tailscale up --accept-routes --exit-node=100.107.241.51   # existing settings
+./serve.py                                                 # leave running
+tailscale funnel --bg 8791
+tailscale funnel status                                    # prints the URL
+```
+
+The URL looks like `https://<machine>.<tailnet>.ts.net/`. Turn it off with
+`tailscale funnel --bg off`.
+
+Caveats: the link is public to anyone who has it, it only works while this Mac is
+awake with `serve.py` running, and Funnel must be enabled for the tailnet (the first
+run prints an admin-console link if it is not). For a link that outlives the laptop,
+use a static host instead.
+
+`tailscale serve` is the tailnet-only equivalent — private, but everyone you share
+with has to be on the tailnet.
 
 ## Wiring the application form
 
