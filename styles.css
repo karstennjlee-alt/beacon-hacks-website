@@ -235,6 +235,12 @@ h1, h2, h3, p, dl, dd, dt { margin: 0; }
 .stat-num { font-family: var(--display); font-weight: 700; font-size: 44px; line-height: 1; letter-spacing: -.03em; }
 .stat-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; color: var(--ink-42); margin-top: 8px; }
 
+/* ---------- backed by (high sponsor strip) ---------- */
+.backers { padding-top: 84px; }
+.backers-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+.ph--backer { height: 72px; border-radius: 10px; border-color: rgba(242, 239, 232, .16); font-size: 10px; color: var(--ink-30); }
+.backers-note { margin-top: 16px; font-size: 14.5px; line-height: 1.55; color: var(--ink-55); max-width: 62ch; }
+
 /* ---------- generic section ---------- */
 .section { padding-top: 100px; }
 .section--bleed { padding-left: 0; padding-right: 0; }
@@ -538,6 +544,7 @@ body.is-locked { overflow: hidden; }
   .site-nav { gap: 16px; font-size: 11px; }
   .crew-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tier--bronze { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .backers-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 900px) {
@@ -566,6 +573,7 @@ body.is-locked { overflow: hidden; }
   .ph--venue { width: 300px; height: 200px; }
 
   .crew-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .backers-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sponsor-notes { grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 40px; }
   .tier--title { grid-template-columns: minmax(0, 1fr); }
   .tier--gold, .tier--bronze { grid-template-columns: repeat(2, minmax(0, 1fr)); }
