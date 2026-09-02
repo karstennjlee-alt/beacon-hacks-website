@@ -27,28 +27,21 @@ can stall each other.
 Drop the static files on any host (Netlify, Vercel, GitHub Pages, S3). Nothing
 server-side is required unless you wire up the application form below.
 
-### Sharing it from this Mac over Tailscale
+### Serving it from this Mac instead
 
-Funnel puts the local server on the public internet over HTTPS, so people who are
-**not** on the tailnet can open it:
+`cloudflared tunnel --url http://127.0.0.1:8791` gives a temporary public HTTPS URL
+backed by `serve.py`. The link lasts only while both stay running, and the hostname
+changes on every restart.
 
-```bash
-tailscale up --accept-routes --exit-node=100.107.241.51   # existing settings
-./serve.py                                                 # leave running
-tailscale funnel --bg 8791
-tailscale funnel status                                    # prints the URL
-```
+Tailscale Funnel also works, but note two traps found the hard way:
 
-The URL looks like `https://<machine>.<tailnet>.ts.net/`. Turn it off with
-`tailscale funnel --bg off`.
-
-Caveats: the link is public to anyone who has it, it only works while this Mac is
-awake with `serve.py` running, and Funnel must be enabled for the tailnet (the first
-run prints an admin-console link if it is not). For a link that outlives the laptop,
-use a static host instead.
-
-`tailscale serve` is the tailnet-only equivalent — private, but everyone you share
-with has to be on the tailnet.
+- Funnel hostnames publish **AAAA records only**. Anyone on an IPv4-only network
+  cannot reach them. You will not notice from a machine on the tailnet, because
+  MagicDNS resolves the name to the node's own `100.x` address and never touches
+  the public path.
+- With an exit node active, `cloudflared` fails too: DNS goes to MagicDNS at
+  `100.100.100.100`, which cannot resolve Cloudflare's edge SRV records, and the
+  QUIC handshake to the edge times out. Turn the exit node off first.
 
 ## Wiring the application form
 
